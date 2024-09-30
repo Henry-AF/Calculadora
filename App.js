@@ -18,6 +18,20 @@ export default function App() {
       });
     }
 
+    if (type === 'decimal') {
+      setDisplay((prevDisplay) => {
+        if (waitingForSecondValue) {
+          setWaitingForSecondValue(false);
+          return '0.';
+        }
+        // Evitar múltiplos pontos
+        if (!prevDisplay.includes('.')) {
+          return `${prevDisplay}.`;
+        }
+        return prevDisplay;
+      });
+    }
+
     if (type === 'operator') {
       setOperator(value);
       setFirstValue(parseFloat(display));
@@ -53,7 +67,8 @@ export default function App() {
     ['7', '8', '9', '/'],
     ['4', '5', '6', '*'],
     ['1', '2', '3', '-'],
-    ['0', 'C', '=', '+'],
+    ['0', '.', 'C', '+'],
+    ['=']
   ];
 
   return (
@@ -72,6 +87,8 @@ export default function App() {
                   handleTap('operator', buttonValue);
                 } else if (buttonValue === '=') {
                   handleTap('equal');
+                } else if (buttonValue === '.') {
+                  handleTap('decimal');
                 } else {
                   handleTap('number', buttonValue);
                 }
@@ -133,4 +150,3 @@ const styles = StyleSheet.create({
     fontSize: 30,
   },
 });
-''
